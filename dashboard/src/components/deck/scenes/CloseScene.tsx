@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 
 /** The step this scene owns. */
-const CLOSE = 14;
+const CLOSE = 15;
 
 const LINES = [
   { text: "Know first.", accent: false },
@@ -12,7 +12,7 @@ const LINES = [
   { text: "Fix it safely.", accent: true },
 ];
 
-/** Slide 9: the promise in three lines, then thank you. The strips echo the title slide. */
+/** Slide 11: the promise in three lines, then thank you. The strips echo the title slide. */
 export default function CloseScene({ step }: { step: number }) {
   const root = useRef<HTMLDivElement>(null);
   const mounted = useRef(false);

@@ -11,7 +11,8 @@ import { backendToken as bearer, backendUrl as API } from "@/lib/server/backend"
 async function forward(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
   const session = await auth();
   const login = session?.user?.login;
-  if (!login) return Response.json({ error: "unauthorized" }, { status: 401 });
+  const mockMode = process.env.NEXT_PUBLIC_USE_MOCKS === "1";
+  if (!login && !mockMode) return Response.json({ error: "unauthorized" }, { status: 401 });
 
   const { path } = await ctx.params;
   if (path[0] !== "v1") return Response.json({ error: "not_found" }, { status: 404 });
@@ -21,7 +22,7 @@ async function forward(req: Request, ctx: { params: Promise<{ path: string[] }> 
   incoming.searchParams.forEach((v, k) => target.searchParams.set(k, v));
 
   const headers = new Headers({ accept: req.headers.get("accept") ?? "application/json" });
-  const token = await bearer(login, isEvents ? "sse" : "api");
+  const token = login ? await bearer(login, isEvents ? "sse" : "api") : undefined;
   if (isEvents) {
     if (token) target.searchParams.set("token", token);
   } else if (token) {
